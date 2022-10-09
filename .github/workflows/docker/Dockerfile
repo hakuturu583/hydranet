@@ -4,4 +4,5 @@ RUN apt-get update && \
   apt-get -y clean && \
   rm -rf /var/lib/apt/lists/*
 RUN curl -sSL https://install.python-poetry.org | python3 -
+ENV PATH $PATH:/root/.local/bin
 RUN poetry install
