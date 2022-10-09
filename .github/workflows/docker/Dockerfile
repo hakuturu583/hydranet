@@ -4,7 +4,4 @@ RUN apt-get update && \
   apt-get -y clean && \
   rm -rf /var/lib/apt/lists/*
 RUN curl -sSL https://install.python-poetry.org | python3 -
-COPY entrypoint.sh /entrypoint.sh
-RUN ["chmod", "+x", "/entrypoint.sh"]
-
-ENTRYPOINT ["bash", "/entrypoint.sh"]
+RUN poetry install

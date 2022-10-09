@@ -3,12 +3,19 @@ from collections import OrderedDict
 from functools import partial
 from typing import Callable, Optional, Any
 
-from torchvision.models.regnet import BlockParams, SimpleStemIN, ResBottleneckBlock, AnyStage, RegNet_Y_400MF_Weights
+from torchvision.models.regnet import (
+    BlockParams,
+    SimpleStemIN,
+    ResBottleneckBlock,
+    AnyStage,
+    RegNet_Y_400MF_Weights,
+)
 from torchvision.models._api import WeightsEnum
 from torchvision.models._utils import _ovewrite_named_param
 from torchvision.utils import _log_api_usage_once
 
 from torch import nn, Tensor
+import torch.onnx
 
 
 class RegNet(nn.Module):
@@ -35,22 +42,14 @@ class RegNet(nn.Module):
             activation = nn.ReLU
 
         # Ad hoc stem
-        self.stem = stem_type(
-            3,  # width_in
-            stem_width,
-            norm_layer,
-            activation,
-        )
+        self.stem = stem_type(3, stem_width, norm_layer, activation)  # width_in
 
         current_width = stem_width
 
         blocks = []
-        for i, (
-            width_out,
-            stride,
-            depth,
-            group_width,
-            bottleneck_multiplier,
+        for (
+            i,
+            (width_out, stride, depth, group_width, bottleneck_multiplier),
         ) in enumerate(block_params._get_expanded_params()):
             blocks.append(
                 (
@@ -101,6 +100,10 @@ class RegNet(nn.Module):
 
         return x
 
+    def to_onnx(self):
+        self.eval()
+
+
 def _regnet(
     block_params: BlockParams,
     weights: Optional[WeightsEnum],
@@ -110,7 +113,9 @@ def _regnet(
     if weights is not None:
         _ovewrite_named_param(kwargs, "num_classes", len(weights.meta["categories"]))
 
-    norm_layer = kwargs.pop("norm_layer", partial(nn.BatchNorm2d, eps=1e-05, momentum=0.1))
+    norm_layer = kwargs.pop(
+        "norm_layer", partial(nn.BatchNorm2d, eps=1e-05, momentum=0.1)
+    )
     model = RegNet(block_params, norm_layer=norm_layer, **kwargs)
 
     if weights is not None:
@@ -118,6 +123,14 @@ def _regnet(
 
     return model
 
-def regnet_y_400mf(*, weights: Optional[RegNet_Y_400MF_Weights] = None, progress: bool = True, **kwargs: Any) -> RegNet:
-    params = BlockParams.from_init_params(depth=16, w_0=48, w_a=27.89, w_m=2.09, group_width=8, se_ratio=0.25, **kwargs)
+
+def regnet_y_400mf(
+    *,
+    weights: Optional[RegNet_Y_400MF_Weights] = None,
+    progress: bool = True,
+    **kwargs: Any,
+) -> RegNet:
+    params = BlockParams.from_init_params(
+        depth=16, w_0=48, w_a=27.89, w_m=2.09, group_width=8, se_ratio=0.25, **kwargs
+    )
     return _regnet(params, weights, progress, **kwargs)
