@@ -5,5 +5,6 @@ RUN apt-get update && \
   rm -rf /var/lib/apt/lists/*
 RUN curl -sSL https://install.python-poetry.org | python3 -
 ENV PATH $PATH:/root/.local/bin
-COPY ../../../ $WORKDIR
+COPY ../../../../hydranet $WORKDIR
+WORKDIR ../../../../hydranet
 RUN poetry install
