@@ -1,5 +1,9 @@
 .venv
 .vscode
-*.onnx
 __pycache__
 .pytest_cache
+
+# Deep Learning Model
+*.onnx
+*.pt
+*.pth
