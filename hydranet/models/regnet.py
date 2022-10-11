@@ -102,6 +102,8 @@ class RegNet(nn.Module):
 
     def to_onnx(self):
         self.eval()
+        dummy_input = torch.randn((1, 3, 224, 224))
+        torch.onnx.export(self, dummy_input, "onnx/regnet.onnx", verbose=True)
 
 
 def _regnet(
@@ -134,3 +136,8 @@ def regnet_y_400mf(
         depth=16, w_0=48, w_a=27.89, w_m=2.09, group_width=8, se_ratio=0.25, **kwargs
     )
     return _regnet(params, weights, progress, **kwargs)
+
+
+if __name__ == "__main__":
+    net = regnet_y_400mf()
+    net.to_onnx()
