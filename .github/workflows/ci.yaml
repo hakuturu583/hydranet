@@ -26,3 +26,7 @@ jobs:
         with:
           name: onnx_files
           path: "*.onnx"
+      - uses: actions/upload-artifact@v3
+        with:
+          name: torch_scripts
+          path: "*.pt"
