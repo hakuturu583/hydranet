@@ -100,10 +100,10 @@ class RegNet(nn.Module):
 
         return x
 
-    def to_onnx(self):
+    def to_onnx(self, filename="onnx/regnet.onnx"):
         self.eval()
         dummy_input = torch.randn((1, 3, 224, 224))
-        torch.onnx.export(self, dummy_input, "onnx/regnet.onnx", verbose=True)
+        torch.onnx.export(self, dummy_input, filename, verbose=True)
 
 
 def _regnet(
