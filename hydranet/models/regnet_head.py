@@ -63,7 +63,7 @@ class RegNetHead(RegNet):
         self, filename=os.path.dirname(__file__) + "/../onnx/regnet.pt"
     ):
         self.eval()
-        torch.jit.script(self).save(filename)
+        torch.jit.trace(self, self.get_dummy_input()).save(filename)
 
 
 def regnet_y_400mf(
