@@ -3,6 +3,7 @@ on: pull_request
 
 jobs:
   ci:
+    name: ci
     strategy:
       fail-fast: false
       matrix:
@@ -12,6 +13,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/cache@v2
+        with:
+          path: ~/.cache/pypoetry
+          key: poetry-cache-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.poetry-version }}
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
@@ -22,6 +27,8 @@ jobs:
         run: poetry install
       - name: test
         run: poetry run pytest
+      - name: build
+        run: poetry build
       - uses: actions/upload-artifact@v3
         with:
           name: onnx_files
@@ -30,3 +37,7 @@ jobs:
         with:
           name: torch_scripts
           path: "*.pt"
+      - uses: actions/upload-artifact@v3
+        with:
+          name: package
+          path: "dist/*"
