@@ -13,6 +13,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/cache@v2
+        with:
+          path: ~/.cache/pypoetry
+          key: poetry-cache-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.poetry-version }}
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
