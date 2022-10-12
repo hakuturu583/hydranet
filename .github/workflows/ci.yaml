@@ -22,6 +22,8 @@ jobs:
         run: poetry install
       - name: test
         run: poetry run pytest
+      - name: build
+        run: poetry build
       - uses: actions/upload-artifact@v3
         with:
           name: onnx_files
@@ -30,3 +32,7 @@ jobs:
         with:
           name: torch_scripts
           path: "*.pt"
+      - uses: actions/upload-artifact@v3
+        with:
+          name: package
+          path: "dist/*"
