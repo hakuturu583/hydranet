@@ -52,10 +52,18 @@ class RegNetHead(RegNet):
 
         return x
 
+    def get_dummy_input(self):
+        return torch.randn((1, 3, 224, 224))
+
     def to_onnx(self, filename=os.path.dirname(__file__) + "/../onnx/regnet.onnx"):
         self.eval()
-        dummy_input = torch.randn((1, 3, 224, 224))
-        torch.onnx.export(self, dummy_input, filename, verbose=True)
+        torch.onnx.export(self, self.get_dummy_input(), filename, verbose=True)
+
+    def to_torch_script(
+        self, filename=os.path.dirname(__file__) + "/../onnx/regnet.pt"
+    ):
+        self.eval()
+        torch.jit.trace(self, self.get_dummy_input()).save(filename)
 
 
 def regnet_y_400mf(
@@ -110,7 +118,7 @@ def _regnet(
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="Python script for RegNet model")
-    parser.add_argument("cmd", choices=["print", "onnx"])
+    parser.add_argument("cmd", choices=["print", "onnx", "torchscript"])
     parser.add_argument(
         "-o",
         "--output",
@@ -124,3 +132,5 @@ if __name__ == "__main__":
         print(net)
     elif args.cmd == "onnx":
         net.to_onnx(args.output)
+    elif args.cmd == "torchscript":
+        net.to_torch_script(args.output)
