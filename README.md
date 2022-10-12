@@ -2,17 +2,11 @@
 
 Hydranet implementation with pytorch
 
-[![build and push docker](https://github.com/hakuturu583/hydranet/actions/workflows/build_docker.yaml/badge.svg)](https://github.com/hakuturu583/hydranet/actions/workflows/build_docker.yaml)
+[![CI](https://github.com/hakuturu583/hydranet/actions/workflows/ci.yaml/badge.svg)](https://github.com/hakuturu583/hydranet/actions/workflows/ci.yaml)
 
 ## Setup
-### Using with docker
+### Install with poetory
 
-with gpu
-```bash
-docker run -it --gpus all ghcr.io/hakuturu583/hydranet:latest
 ```
-
-without gpu
-```bash
-docker run -it ghcr.io/hakuturu583/hydranet:latest
+poetry install
 ```
