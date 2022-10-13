@@ -3,6 +3,7 @@
 __pycache__
 .pytest_cache
 dist
+*.whl
 
 # Deep Learning Model
 *.onnx
