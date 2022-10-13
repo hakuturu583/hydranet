@@ -61,6 +61,6 @@ jobs:
           tags: ghcr.io/${{ github.repository_owner }}/hydranet:latest
           no-cache: false
           push: ${{ github.event_name != 'pull_request' }}
-          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/hydranet:buildcache
-          cache-to: type=registry,ref=ghcr.io/${{ github.repository_owner }}/hydranet:buildcache,mode=max
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/hydranet_tensorrt:buildcache
+          cache-to: type=registry,ref=ghcr.io/${{ github.repository_owner }}/hydranet_tensorrt:buildcache,mode=max
           push: ${{ github.event_name != 'pull_request'}}
