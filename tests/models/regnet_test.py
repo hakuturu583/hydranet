@@ -1,5 +1,5 @@
 import pytest
-from hydranet.models.regnet_head import RegNetHead, regnet_y_400mf
+from hydranet.models.regnet import regnet_y_400mf
 
 
 def test_print():

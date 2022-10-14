@@ -52,4 +52,4 @@ extra_javascript:
 nav:
   - Home: index.md
   - Models:
-    - RegNet: models/regnet_head.md
+    - RegNet: models/regnet.md
