@@ -50,4 +50,4 @@ extra_javascript:
   - https://unpkg.com/mermaid/dist/mermaid.min.js
 
 nav:
-  - Home: home.md
+  - Home: index.md
