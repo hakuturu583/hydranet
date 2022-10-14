@@ -102,7 +102,7 @@ jobs:
       id: lychee
       with:
         fail: true
-        args: "--verbose --no-progress './**/*.md' './**/*.html' --timeout 1000 --max-concurrency 32 -T 1 --retry-wait-time 10"
+        args: "--verbose --no-progress './**/*.md' --timeout 1000 --max-concurrency 32 -T 1 --retry-wait-time 10"
       env:
         GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
     - uses: actions/upload-artifact@v2
