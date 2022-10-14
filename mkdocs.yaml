@@ -1,0 +1,53 @@
+repo_url: https://github.com/hakuturu583/hydranet
+site_name: Hydranet implementation for pytorch.
+theme:
+  name: material
+  feature:
+    tabs: true
+  icon:
+    logo: material/car
+    repo: fontawesome/brands/github
+extra:
+  font:
+    text: "Noto Sans JP"
+    code: "Consolas"
+  search:
+    language: en
+  social:
+    - icon: fontawesome/solid/bug
+      link: https://github.com/hakuturu583/hydranet/issues
+    - icon: fontawesome/solid/code-pull-request
+      link: https://github.com/hakuturu583/hydranet/pulls
+plugins:
+  - search
+  - mkdocstrings
+  - git-revision-date-localized
+
+copyright: "Copyright &copy; 2022 Masaya Kataoka."
+
+markdown_extensions:
+  - attr_list
+  - codehilite: { guess_lang: false }
+  - fontawesome_markdown
+  - mdx_math
+  - plantuml_markdown: { server: http://www.plantuml.com/plantuml }
+  - pymdownx.arithmatex
+  - pymdownx.emoji: { emoji_generator: !!python/name:pymdownx.emoji.to_svg  }
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - toc: { permalink: "#" }
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_div_format
+
+extra_css:
+  - "https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css"
+  - https://unpkg.com/mermaid@8.0.0/dist/mermaid.css
+extra_javascript:
+  - http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML
+  - https://unpkg.com/mermaid/dist/mermaid.min.js
+
+nav:
+  - Home: home.md
