@@ -22,4 +22,4 @@ jobs:
     - name: Install mkdocs
       run: pip3 install mkdocs mkdocstrings mkdocs-material pymdown-extensions fontawesome_markdown markdown python-markdown-math plantuml-markdown mkdocs-codeinclude-plugin mkdocs-git-revision-date-localized-plugin plantuml
     - name: Install netron
-      run: snap install netron
+      run: sudo snap install netron
