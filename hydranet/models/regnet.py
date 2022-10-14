@@ -21,7 +21,7 @@ import argparse
 import os
 
 
-class RegNetHead(RegNet):
+class RegNet(RegNet):
     def __init__(
         self,
         block_params: BlockParams,
@@ -71,7 +71,7 @@ def regnet_y_400mf(
     weights: Optional[RegNet_Y_400MF_Weights] = None,
     progress: bool = True,
     **kwargs: Any,
-) -> RegNetHead:
+) -> RegNet:
     """
     Constructs a RegNetY_400MF architecture from
     `Designing Network Design Spaces <https://arxiv.org/abs/2003.13678>`_.
@@ -100,14 +100,14 @@ def _regnet(
     weights: Optional[WeightsEnum],
     progress: bool,
     **kwargs: Any,
-) -> RegNetHead:
+) -> RegNet:
     if weights is not None:
         _ovewrite_named_param(kwargs, "num_classes", len(weights.meta["categories"]))
 
     norm_layer = kwargs.pop(
         "norm_layer", partial(nn.BatchNorm2d, eps=1e-05, momentum=0.1)
     )
-    model = RegNetHead(block_params, norm_layer=norm_layer, **kwargs)
+    model = RegNet(block_params, norm_layer=norm_layer, **kwargs)
 
     if weights is not None:
         model.load_state_dict(weights.get_state_dict(progress=progress))
