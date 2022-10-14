@@ -16,4 +16,4 @@ RUN python3 setup.py install
 WORKDIR ../
 COPY *.whl .
 RUN pip install *.whl
-COPY to_trt.py
+COPY to_trt.py .
