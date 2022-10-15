@@ -7,5 +7,5 @@ This project is inspired by Tesla AI Day.
 
 Some of the source code was borrowed from the following repositories.
 
-- RegNet model implemtntation was borrowed from [torchvision](https://github.com/pytorch/vision) project.
+- [RegNet](models/regnet.md) model implemtntation was borrowed from [torchvision](https://github.com/pytorch/vision) project.
 - BiFPN model implementation was borrowed from [EfficientDet.Pytorch](https://github.com/toandaominh1997/EfficientDet.Pytorch.git) project.
