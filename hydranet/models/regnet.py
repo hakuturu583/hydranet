@@ -1,7 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from ast import arg
 from functools import partial
 from typing import Callable, Optional, Any
 
