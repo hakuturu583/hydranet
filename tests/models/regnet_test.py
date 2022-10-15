@@ -22,7 +22,7 @@ def test_get_output_shapes():
             assert shape == torch.Size([1, 104, 28, 28])
         elif index == 3:
             assert shape == torch.Size([1, 208, 14, 14])
-        elif index == 3:
+        elif index == 4:
             assert shape == torch.Size([1, 440, 7, 7])
 
 
