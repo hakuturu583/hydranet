@@ -31,9 +31,9 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from regnet import regnet_y_400mf, RegNet_Y_400MF_Weights
-from util import getChannels
-from module import ConvModule, xavier_init
+from hydranet.models.regnet_model import regnet_y_400mf, RegNet_Y_400MF_Weights
+from hydranet.models.util import getChannels
+from hydranet.models.module import ConvModule, xavier_init
 
 
 class BiFPN(nn.Module):

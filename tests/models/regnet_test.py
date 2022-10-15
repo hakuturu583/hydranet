@@ -1,6 +1,6 @@
-import enum
-import pytest
 from hydranet.models.regnet import regnet_y_400mf
+from hydranet.models.bifpn import BiFPN
+from hydranet.models.util import getChannels
 import torch
 
 
