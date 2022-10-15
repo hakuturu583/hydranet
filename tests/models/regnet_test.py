@@ -7,6 +7,11 @@ def test_print():
     print(net)
 
 
+def test_get_output_shapes():
+    net = regnet_y_400mf()
+    net.get_output_shapes()
+
+
 def test_onnx():
     net = regnet_y_400mf()
     net.to_onnx("regnet.onnx")
