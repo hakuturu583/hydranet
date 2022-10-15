@@ -1,4 +1,4 @@
-from hydranet.models.regnet import RegNet, regnet_y_400mf
+from hydranet.models.regnet_model import RegNet, regnet_y_400mf
 from torchvision.models.regnet import RegNet_Y_400MF_Weights
 from torch2trt import torch2trt
 import torch

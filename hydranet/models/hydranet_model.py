@@ -1,9 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from bifpn import BiFPN
+from hydranet.models.bifpn_model import BiFPN
+from hydranet.models.regnet_model import regnet_y_400mf, RegNet_Y_400MF_Weights
 from numpy import size
-from regnet import regnet_y_400mf, RegNet_Y_400MF_Weights
 from util import getChannels
 from torch import nn, Tensor
 

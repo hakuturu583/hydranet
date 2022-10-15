@@ -40,10 +40,6 @@ jobs:
           path: "*.onnx"
       - uses: actions/upload-artifact@v3
         with:
-          name: torch_scripts
-          path: "*.pt"
-      - uses: actions/upload-artifact@v3
-        with:
           name: package
           path: "dist/*"
   tensorrt:
@@ -80,9 +76,6 @@ jobs:
     - uses: actions/download-artifact@v3
       with:
         name: onnx_files
-    - uses: actions/download-artifact@v3
-      with:
-        name: torch_scripts
     - uses: actions/setup-python@v1
       with:
         python-version: "3.10.7"
@@ -96,6 +89,7 @@ jobs:
     - name: Copy to models directory
       run: |
         mv regnet.* docs/models/
+        mv bifpn.* docs/models/
     - name: Build Document
       run: mkdocs build
     - uses: lycheeverse/lychee-action@v1.5.0

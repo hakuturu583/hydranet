@@ -53,3 +53,4 @@ nav:
   - Home: index.md
   - Models:
     - RegNet: models/regnet.md
+    - BiFPN: models/bifpn.md

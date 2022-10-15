@@ -1,6 +1,6 @@
-import enum
-import pytest
-from hydranet.models.regnet import regnet_y_400mf
+from hydranet.models.regnet_model import regnet_y_400mf
+from hydranet.models.bifpn_model import BiFPN
+from hydranet.models.util import getChannels
 import torch
 
 
@@ -22,15 +22,10 @@ def test_get_output_shapes():
             assert shape == torch.Size([1, 104, 28, 28])
         elif index == 3:
             assert shape == torch.Size([1, 208, 14, 14])
-        elif index == 3:
+        elif index == 4:
             assert shape == torch.Size([1, 440, 7, 7])
 
 
 def test_onnx():
     net = regnet_y_400mf()
     net.to_onnx("regnet.onnx")
-
-
-def test_torchscript():
-    net = regnet_y_400mf()
-    net.to_torch_script("regnet.pt")
