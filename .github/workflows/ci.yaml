@@ -96,6 +96,7 @@ jobs:
     - name: Copy to models directory
       run: |
         mv regnet.* docs/models/
+        mv bifpn.* docs/models/
     - name: Build Document
       run: mkdocs build
     - uses: lycheeverse/lychee-action@v1.5.0

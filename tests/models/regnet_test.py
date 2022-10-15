@@ -1,5 +1,5 @@
-from hydranet.models.regnet import regnet_y_400mf
-from hydranet.models.bifpn import BiFPN
+from hydranet.models.regnet_model import regnet_y_400mf
+from hydranet.models.bifpn_model import BiFPN
 from hydranet.models.util import getChannels
 import torch
 
