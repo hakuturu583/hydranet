@@ -135,7 +135,7 @@ class BiFPN(nn.Module):
         regnet = regnet_y_400mf(weights=RegNet_Y_400MF_Weights.IMAGENET1K_V1)
         return regnet(regnet.get_dummy_input())
 
-    def forward(self, inputs) -> List[Tensor]:
+    def forward(self, inputs: List[Tensor]) -> List[Tensor]:
         assert len(inputs) == len(self.in_channels)
 
         # build laterals
@@ -194,7 +194,9 @@ class BiFPN(nn.Module):
     ) -> None:
         if eval:
             self.eval()
-        torch.jit.trace(self, self.get_dummy_input()).save(filename)
+        for input in self.get_dummy_input():
+            print(input.shape)
+        torch.jit.trace(self, example_inputs=self.get_dummy_input()).save(filename)
 
 
 class BiFPNModule(nn.Module):
@@ -286,9 +288,7 @@ class BiFPNModule(nn.Module):
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="Python script for RegNet model")
-    parser.add_argument(
-        "cmd", choices=["print", "print_output_shapes", "onnx", "torchscript"]
-    )
+    parser.add_argument("cmd", choices=["print", "print_output_shapes", "onnx"])
     parser.add_argument(
         "-o",
         "--output",
@@ -312,5 +312,3 @@ if __name__ == "__main__":
             print(shape)
     elif args.cmd == "onnx":
         net.to_onnx(args.output)
-    elif args.cmd == "torchscript":
-        net.to_torch_script(args.output)

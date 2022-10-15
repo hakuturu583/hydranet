@@ -29,8 +29,3 @@ def test_get_output_shapes():
 def test_onnx():
     net = regnet_y_400mf()
     net.to_onnx("regnet.onnx")
-
-
-def test_torchscript():
-    net = regnet_y_400mf()
-    net.to_torch_script("regnet.pt")

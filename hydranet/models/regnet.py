@@ -132,9 +132,7 @@ def _regnet(
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="Python script for RegNet model")
-    parser.add_argument(
-        "cmd", choices=["print", "print_output_shapes", "onnx", "torchscript"]
-    )
+    parser.add_argument("cmd", choices=["print", "print_output_shapes", "onnx"])
     parser.add_argument(
         "-o",
         "--output",
@@ -151,5 +149,3 @@ if __name__ == "__main__":
             print(shape)
     elif args.cmd == "onnx":
         net.to_onnx(args.output)
-    elif args.cmd == "torchscript":
-        net.to_torch_script(args.output)
