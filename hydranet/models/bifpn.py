@@ -306,8 +306,8 @@ if __name__ == "__main__":
         print(net)
     elif args.cmd == "print_output_shapes":
         net.get_output_shapes()
-        # for shape in net.get_output_shapes():
-        #    print(shape)
+        for shape in net.get_output_shapes():
+            print(shape)
     elif args.cmd == "onnx":
         net.to_onnx(args.output)
     elif args.cmd == "torchscript":
