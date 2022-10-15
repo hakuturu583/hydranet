@@ -130,6 +130,10 @@ class BiFPN(nn.Module):
             if isinstance(m, nn.Conv2d):
                 xavier_init(m, distribution="uniform")
 
+    def get_dummy_input(self) -> List[torch.Tensor]:
+        regnet = regnet_y_400mf(weights=RegNet_Y_400MF_Weights.IMAGENET1K_V1)
+        return regnet(regnet.get_dummy_input())
+
     def forward(self, inputs) -> List[torch.Tensor]:
         assert len(inputs) == len(self.in_channels)
 
