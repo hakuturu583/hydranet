@@ -31,12 +31,6 @@ class Hydranet(nn.Module):
         features = self.backbone(x)
         return self.neck(features)
 
-    # def train(self, cuda: bool = True):
-    # loader = Kitti(root="kitti", download=True)
-    # self.train()
-    # for batch_idx, (data, target) in enumerate(loader):
-    #    print(target)
-
 
 if __name__ == "__main__":
     net = Hydranet()
