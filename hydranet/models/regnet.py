@@ -58,7 +58,7 @@ class RegNet(RegNet):
             output.append(x)
         return output
 
-    def get_dummy_input(self) -> torch.Tensor:
+    def get_dummy_input(self) -> Tensor:
         return torch.randn((1, 3, 224, 224))
 
     def to_onnx(

@@ -26,6 +26,7 @@
 import os
 import argparse
 from typing import List
+from torch import Tensor
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -130,11 +131,11 @@ class BiFPN(nn.Module):
             if isinstance(m, nn.Conv2d):
                 xavier_init(m, distribution="uniform")
 
-    def get_dummy_input(self) -> List[torch.Tensor]:
+    def get_dummy_input(self) -> List[Tensor]:
         regnet = regnet_y_400mf(weights=RegNet_Y_400MF_Weights.IMAGENET1K_V1)
         return regnet(regnet.get_dummy_input())
 
-    def forward(self, inputs) -> List[torch.Tensor]:
+    def forward(self, inputs) -> List[Tensor]:
         assert len(inputs) == len(self.in_channels)
 
         # build laterals
@@ -208,14 +209,15 @@ class BiFPNModule(nn.Module):
         eps=0.0001,
     ) -> None:
         super(BiFPNModule, self).__init__()
-        self.activation = activation
+        self.activation = activation  # for shape in net.get_output_shapes():
+        #    print(shape)
         self.eps = eps
         self.levels = levels
         self.bifpn_convs = nn.ModuleList()
         # weighted
-        self.w1 = nn.Parameter(torch.Tensor(2, levels).fill_(init))
+        self.w1 = nn.Parameter(Tensor(2, levels).fill_(init))
         self.relu1 = nn.ReLU()
-        self.w2 = nn.Parameter(torch.Tensor(3, levels - 2).fill_(init))
+        self.w2 = nn.Parameter(Tensor(3, levels - 2).fill_(init))
         self.relu2 = nn.ReLU()
         for jj in range(2):
             for i in range(self.levels - 1):  # 1,2,3
@@ -239,7 +241,7 @@ class BiFPNModule(nn.Module):
             if isinstance(m, nn.Conv2d):
                 xavier_init(m, distribution="uniform")
 
-    def forward(self, inputs) -> torch.Tensor:
+    def forward(self, inputs) -> Tensor:
         assert len(inputs) == self.levels
         # build top-down and down-top path with stack
         levels = self.levels
