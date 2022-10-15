@@ -23,17 +23,18 @@ class Hydranet(nn.Module):
             num_outs=num_multi_scale_features,
         )
 
-    def get_dummy_input(self):
+    def get_dummy_input(self) -> Tensor:
         return self.backbone.get_dummy_input()
 
     def forward(self, x: Tensor) -> Tensor:
         features = self.backbone(x)
-        # return features
+        for feature in features:
+            print(feature.shape)
         return self.neck(features)
 
 
 if __name__ == "__main__":
     net = Hydranet()
     feature = net.forward(net.get_dummy_input())
-    for out in feature:
-        print(out.shape)
+    # for out in feature:
+    # print(out.shape)
