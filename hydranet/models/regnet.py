@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from functools import partial
-from typing import Callable, Optional, Any
+from typing import Callable, Optional, Any, List
 
 from torchvision.models.regnet import (
     BlockParams,
@@ -42,7 +42,7 @@ class RegNet(RegNet):
             activation=activation,
         )
 
-    def get_output_shapes(self, eval: bool = True):
+    def get_output_shapes(self, eval: bool = True) -> List[torch.Size]:
         if eval:
             self.eval()
         shapes = []
@@ -58,14 +58,14 @@ class RegNet(RegNet):
             output.append(x)
         return output
 
-    def get_dummy_input(self):
+    def get_dummy_input(self) -> torch.Tensor:
         return torch.randn((1, 3, 224, 224))
 
     def to_onnx(
         self,
         filename=os.path.dirname(__file__) + "/../onnx/regnet.onnx",
         eval: bool = True,
-    ):
+    ) -> None:
         if eval:
             self.eval()
         torch.onnx.export(self, self.get_dummy_input(), filename, verbose=True)
@@ -74,7 +74,7 @@ class RegNet(RegNet):
         self,
         filename=os.path.dirname(__file__) + "/../onnx/regnet.pt",
         eval: bool = True,
-    ):
+    ) -> None:
         if eval:
             self.eval()
         torch.jit.trace(self, self.get_dummy_input()).save(filename)
