@@ -3,9 +3,10 @@
 
 from hydranet.models.bifpn_model import BiFPN
 from hydranet.models.regnet_model import regnet_y_400mf, RegNet_Y_400MF_Weights
+from hydranet.models.util import getChannels
 from numpy import size
-from util import getChannels
 from torch import nn, Tensor
+from torchvision.datasets.kitti import Kitti
 
 
 class Hydranet(nn.Module):
@@ -30,7 +31,13 @@ class Hydranet(nn.Module):
         features = self.backbone(x)
         return self.neck(features)
 
+    # def train(self, cuda: bool = True):
+    # loader = Kitti(root="kitti", download=True)
+    # self.train()
+    # for batch_idx, (data, target) in enumerate(loader):
+    #    print(target)
+
 
 if __name__ == "__main__":
     net = Hydranet()
-    feature = net.forward(net.get_dummy_input())
+    # net.train()
