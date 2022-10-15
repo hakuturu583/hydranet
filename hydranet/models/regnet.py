@@ -52,7 +52,7 @@ class RegNet(RegNet):
 
     def forward(self, x: Tensor) -> Tensor:
         x = self.stem(x)
-        output = []
+        output = [x]
         for layer in self.trunk_output:
             x = layer(x)
             output.append(x)
