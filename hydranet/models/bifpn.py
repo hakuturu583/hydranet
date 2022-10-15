@@ -180,7 +180,7 @@ class BiFPN(nn.Module):
 
     def to_onnx(
         self,
-        filename=os.path.dirname(__file__) + "/../onnx/regnet.onnx",
+        filename=os.path.dirname(__file__) + "/../onnx/bifpn.onnx",
         eval: bool = True,
     ) -> None:
         if eval:
@@ -189,7 +189,7 @@ class BiFPN(nn.Module):
 
     def to_torch_script(
         self,
-        filename=os.path.dirname(__file__) + "/../onnx/regnet.pt",
+        filename=os.path.dirname(__file__) + "/../onnx/bifpn.pt",
         eval: bool = True,
     ) -> None:
         if eval:
@@ -293,7 +293,7 @@ if __name__ == "__main__":
         "-o",
         "--output",
         help="output file path",
-        default=os.path.dirname(__file__) + "/../onnx/regnet.onnx",
+        default=os.path.dirname(__file__) + "/../onnx/bifpn.onnx",
     )
     parser.parse_args()
     args = parser.parse_args()
