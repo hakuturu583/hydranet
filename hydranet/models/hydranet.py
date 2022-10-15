@@ -28,13 +28,9 @@ class Hydranet(nn.Module):
 
     def forward(self, x: Tensor) -> Tensor:
         features = self.backbone(x)
-        for feature in features:
-            print(feature.shape)
         return self.neck(features)
 
 
 if __name__ == "__main__":
     net = Hydranet()
     feature = net.forward(net.get_dummy_input())
-    # for out in feature:
-    # print(out.shape)
