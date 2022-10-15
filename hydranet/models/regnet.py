@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+from ast import arg
 from functools import partial
 from typing import Callable, Optional, Any
 
@@ -42,27 +43,41 @@ class RegNet(RegNet):
             activation=activation,
         )
 
+    def get_output_shapes(self, eval: bool = True):
+        if eval:
+            self.eval()
+        shapes = []
+        for output in self.forward(self.get_dummy_input()):
+            shapes.append(output.shape)
+        return shapes
+
     def forward(self, x: Tensor) -> Tensor:
         x = self.stem(x)
-        x = self.trunk_output(x)
-
-        x = self.avgpool(x)
-        x = x.flatten(start_dim=1)
-        x = self.fc(x)
-
-        return x
+        output = []
+        for layer in self.trunk_output:
+            x = layer(x)
+            output.append(x)
+        return output
 
     def get_dummy_input(self):
         return torch.randn((1, 3, 224, 224))
 
-    def to_onnx(self, filename=os.path.dirname(__file__) + "/../onnx/regnet.onnx"):
-        self.eval()
+    def to_onnx(
+        self,
+        filename=os.path.dirname(__file__) + "/../onnx/regnet.onnx",
+        eval: bool = True,
+    ):
+        if eval:
+            self.eval()
         torch.onnx.export(self, self.get_dummy_input(), filename, verbose=True)
 
     def to_torch_script(
-        self, filename=os.path.dirname(__file__) + "/../onnx/regnet.pt"
+        self,
+        filename=os.path.dirname(__file__) + "/../onnx/regnet.pt",
+        eval: bool = True,
     ):
-        self.eval()
+        if eval:
+            self.eval()
         torch.jit.trace(self, self.get_dummy_input()).save(filename)
 
 
@@ -118,7 +133,9 @@ def _regnet(
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="Python script for RegNet model")
-    parser.add_argument("cmd", choices=["print", "onnx", "torchscript"])
+    parser.add_argument(
+        "cmd", choices=["print", "print_output_shapes", "onnx", "torchscript"]
+    )
     parser.add_argument(
         "-o",
         "--output",
@@ -127,9 +144,15 @@ if __name__ == "__main__":
     )
     parser.parse_args()
     args = parser.parse_args()
-    net = regnet_y_400mf()
+    net = regnet_y_400mf(weights=RegNet_Y_400MF_Weights.IMAGENET1K_V1)
     if args.cmd == "print":
-        print(net)
+        # print(dir(net))
+        for block in net.trunk_output:
+            print(block)
+        # print(net)
+    elif args.cmd == "print_output_shapes":
+        for shape in net.get_output_shapes():
+            print(shape)
     elif args.cmd == "onnx":
         net.to_onnx(args.output)
     elif args.cmd == "torchscript":
