@@ -23,6 +23,8 @@
 # THE SOFTWARE.
 
 
+import os
+import argparse
 import torch.nn as nn
 import torch.nn.functional as F
 
@@ -245,3 +247,56 @@ class BiFPNModule(nn.Module):
         ) / (w1[0, levels - 1] + w1[1, levels - 1] + self.eps)
         pathtd[levels - 1] = self.bifpn_convs[idx_bifpn](pathtd[levels - 1])
         return pathtd
+
+    def to_onnx(
+        self,
+        filename=os.path.dirname(__file__) + "/../onnx/regnet.onnx",
+        eval: bool = True,
+    ):
+        if eval:
+            self.eval()
+        torch.onnx.export(self, self.get_dummy_input(), filename, verbose=True)
+
+    def to_torch_script(
+        self,
+        filename=os.path.dirname(__file__) + "/../onnx/regnet.pt",
+        eval: bool = True,
+    ):
+        if eval:
+            self.eval()
+        torch.jit.trace(self, self.get_dummy_input()).save(filename)
+
+
+if __name__ == "__main__":
+
+    parser = argparse.ArgumentParser(description="Python script for RegNet model")
+    parser.add_argument(
+        "cmd", choices=["print", "print_output_shapes", "onnx", "torchscript"]
+    )
+    parser.add_argument(
+        "-o",
+        "--output",
+        help="output file path",
+        default=os.path.dirname(__file__) + "/../onnx/regnet.onnx",
+    )
+    parser.parse_args()
+    args = parser.parse_args()
+
+    from regnet import regnet_y_400mf, RegNet_Y_400MF_Weights
+    from util import getChannels
+
+    backbone_output_shape = regnet_y_400mf(
+        weights=RegNet_Y_400MF_Weights.IMAGENET1K_V1
+    ).get_output_shapes()
+    net = BiFPN(
+        in_channels=getChannels(backbone_output_shape), out_channels=88, num_outs=5
+    )
+    if args.cmd == "print":
+        print(net)
+    elif args.cmd == "print_output_shapes":
+        for shape in net.get_output_shapes():
+            print(shape)
+    elif args.cmd == "onnx":
+        net.to_onnx(args.output)
+    elif args.cmd == "torchscript":
+        net.to_torch_script(args.output)

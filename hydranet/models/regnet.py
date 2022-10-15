@@ -145,10 +145,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     net = regnet_y_400mf(weights=RegNet_Y_400MF_Weights.IMAGENET1K_V1)
     if args.cmd == "print":
-        # print(dir(net))
-        for block in net.trunk_output:
-            print(block)
-        # print(net)
+        print(dir(net))
     elif args.cmd == "print_output_shapes":
         for shape in net.get_output_shapes():
             print(shape)
