@@ -276,32 +276,6 @@ class BiFPNModule(nn.Module):
         pathtd[levels - 1] = self.bifpn_convs[idx_bifpn](pathtd[levels - 1])
         return pathtd
 
-    def get_output_shapes(self, eval: bool = True) -> List[torch.Size]:
-        if eval:
-            self.eval()
-        shapes = []
-        # for output in self.forward(self.get_dummy_input()):
-        #    shapes.append(output.shape)
-        return shapes
-
-    def to_onnx(
-        self,
-        filename=os.path.dirname(__file__) + "/../onnx/regnet.onnx",
-        eval: bool = True,
-    ) -> None:
-        if eval:
-            self.eval()
-        torch.onnx.export(self, self.get_dummy_input(), filename, verbose=True)
-
-    def to_torch_script(
-        self,
-        filename=os.path.dirname(__file__) + "/../onnx/regnet.pt",
-        eval: bool = True,
-    ) -> None:
-        if eval:
-            self.eval()
-        torch.jit.trace(self, self.get_dummy_input()).save(filename)
-
 
 if __name__ == "__main__":
 
