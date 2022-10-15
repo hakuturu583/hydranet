@@ -12,12 +12,11 @@ class Hydranet(nn.Module):
         super().__init__()
         self.backbone = regnet_y_400mf(weights=RegNet_Y_400MF_Weights.IMAGENET1K_V1)
         backbone_output_shape = self.backbone.get_output_shapes()
-        for shape in backbone_output_shape:
-            self.neck = nn.Sequential(
-                BiFPN(shape[1]), BiFPN(shape[1]), BiFPN(shape[1]), BiFPN(shape[1])
-            )
+        self.neck = nn.Sequential()
+        for index, shape in enumerate(backbone_output_shape):
+            self.neck.add_module('bifpn' + str(index), BiFPN(shape[1]))
 
 
 if __name__ == "__main__":
     net = Hydranet()
-    # print(net)
+    print(net)
