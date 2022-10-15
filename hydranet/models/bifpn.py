@@ -26,12 +26,13 @@
 import os
 import argparse
 from typing import List
+import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-
+from regnet import regnet_y_400mf, RegNet_Y_400MF_Weights
+from util import getChannels
 from module import ConvModule, xavier_init
-import torch
 
 
 class BiFPN(nn.Module):
@@ -50,7 +51,7 @@ class BiFPN(nn.Module):
         conv_cfg=None,
         norm_cfg=None,
         activation=None,
-    ):
+    ) -> None:
         super(BiFPN, self).__init__()
         assert isinstance(in_channels, list)
         self.in_channels = in_channels
@@ -124,12 +125,12 @@ class BiFPN(nn.Module):
         self.init_weights()
 
     # default init_weights for conv(msra) and norm in ConvModule
-    def init_weights(self):
+    def init_weights(self) -> None:
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
                 xavier_init(m, distribution="uniform")
 
-    def forward(self, inputs):
+    def forward(self, inputs) -> List[torch.Tensor]:
         assert len(inputs) == len(self.in_channels)
 
         # build laterals
@@ -164,6 +165,32 @@ class BiFPN(nn.Module):
                         outs.append(self.fpn_convs[i](outs[-1]))
         return tuple(outs)
 
+    def get_output_shapes(self, eval: bool = True) -> List[torch.Size]:
+        if eval:
+            self.eval()
+        shapes = []
+        for output in self.forward(self.get_dummy_input()):
+            shapes.append(output.shape)
+        return shapes
+
+    def to_onnx(
+        self,
+        filename=os.path.dirname(__file__) + "/../onnx/regnet.onnx",
+        eval: bool = True,
+    ) -> None:
+        if eval:
+            self.eval()
+        torch.onnx.export(self, self.get_dummy_input(), filename, verbose=True)
+
+    def to_torch_script(
+        self,
+        filename=os.path.dirname(__file__) + "/../onnx/regnet.pt",
+        eval: bool = True,
+    ) -> None:
+        if eval:
+            self.eval()
+        torch.jit.trace(self, self.get_dummy_input()).save(filename)
+
 
 class BiFPNModule(nn.Module):
     def __init__(
@@ -175,7 +202,7 @@ class BiFPNModule(nn.Module):
         norm_cfg=None,
         activation=None,
         eps=0.0001,
-    ):
+    ) -> None:
         super(BiFPNModule, self).__init__()
         self.activation = activation
         self.eps = eps
@@ -203,12 +230,12 @@ class BiFPNModule(nn.Module):
                 self.bifpn_convs.append(fpn_conv)
 
     # default init_weights for conv(msra) and norm in ConvModule
-    def init_weights(self):
+    def init_weights(self) -> None:
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
                 xavier_init(m, distribution="uniform")
 
-    def forward(self, inputs):
+    def forward(self, inputs) -> torch.Tensor:
         assert len(inputs) == self.levels
         # build top-down and down-top path with stack
         levels = self.levels
@@ -290,9 +317,6 @@ if __name__ == "__main__":
     )
     parser.parse_args()
     args = parser.parse_args()
-
-    from regnet import regnet_y_400mf, RegNet_Y_400MF_Weights
-    from util import getChannels
 
     backbone_output_shape = regnet_y_400mf(
         weights=RegNet_Y_400MF_Weights.IMAGENET1K_V1
