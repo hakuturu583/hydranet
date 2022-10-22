@@ -13,9 +13,9 @@ def train(model, use_cuda: bool = True) -> None:
     for batch_idx, (data, target) in enumerate(loader):
         data = trans(data).to(device)
         for annotation in target:
-            print(annotation['type'])
-        #data = data.to(device)
-        #target = target.to(device)
+            print(annotation["type"])
+        # data = data.to(device)
+        # target = target.to(device)
     return
 
 
