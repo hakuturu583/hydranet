@@ -22,6 +22,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+from pyparsing import Optional
 from torch import nn, Tensor
 import torch
 from hydranet.models.module import Anchors, ClipBoxes, BBoxTransform
@@ -45,19 +46,15 @@ class BboxDetectionHead(nn.Module):
         self.iou_threshold = object_detection_iou_threshold
         self.criterion = FocalLoss()
 
-    def forward(self, inputs: Tensor) -> Tensor:
-        if self.is_training:
-            inputs, annotations = inputs
-        else:
-            inputs = inputs
-        classification = torch.cat([out for out in inputs[0]], dim=1)
-        regression = torch.cat([out for out in inputs[1]], dim=1)
-        anchors = self.anchors(inputs)
+    def forward(self, detection: tuple, image: Tensor, annotations=None) -> Tensor:
+        classification = torch.cat([out for out in detection[0]], dim=1)
+        regression = torch.cat([out for out in detection[1]], dim=1)
+        anchors = self.anchors(image)
         if self.is_training:
             return self.criterion(classification, regression, anchors, annotations)
         else:
             transformed_anchors = self.regressBoxes(anchors, regression)
-            transformed_anchors = self.clipBoxes(transformed_anchors, inputs)
+            transformed_anchors = self.clipBoxes(transformed_anchors, detection)
             scores = torch.max(classification, dim=2, keepdim=True)[0]
             scores_over_thresh = (scores > self.threshold)[0, :, 0]
 

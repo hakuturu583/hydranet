@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+from matplotlib import image
 from hydranet.models.retinahead_model import RetinaHead
 from hydranet.models.bbox_detection_head_model import BboxDetectionHead
 from hydranet.models.bifpn_model import BiFPN
@@ -51,10 +52,10 @@ class Hydranet(nn.Module):
     def get_dummy_input(self) -> Tensor:
         return self.backbone.get_dummy_input()
 
-    def forward(self, x: Tensor) -> Tensor:
-        features = self.neck(self.backbone(x)[-5:])
+    def forward(self, image: Tensor) -> Tensor:
+        features = self.neck(self.backbone(image)[-5:])
         detection = self.head(features)
-        return self.bbox_detection_head(detection)
+        return self.bbox_detection_head(detection, image)
 
     def freeze_backbone(self):
         """Freeze BatchNorm layers."""
