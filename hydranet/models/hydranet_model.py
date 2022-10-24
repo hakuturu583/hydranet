@@ -54,8 +54,7 @@ class Hydranet(nn.Module):
 
     def forward(self, image: Tensor) -> Tensor:
         features = self.neck(self.backbone(image)[-5:])
-        detection = self.head(features)
-        return self.bbox_detection_head(detection, image)
+        return self.bbox_detection_head(self.head(features), image)
 
     def freeze_backbone(self):
         """Freeze BatchNorm layers."""

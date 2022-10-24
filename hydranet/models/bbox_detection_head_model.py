@@ -40,8 +40,8 @@ class BboxDetectionHead(nn.Module):
         super().__init__()
         self.is_training = is_training
         self.anchors = Anchors()
-        self.regressBoxes = BBoxTransform()
-        self.clipBoxes = ClipBoxes()
+        self.regress_boxes = BBoxTransform()
+        self.clip_boxes = ClipBoxes()
         self.threshold = object_detection_threshold
         self.iou_threshold = object_detection_iou_threshold
         self.criterion = FocalLoss()
@@ -53,8 +53,8 @@ class BboxDetectionHead(nn.Module):
         if self.is_training:
             return self.criterion(classification, regression, anchors, annotations)
         else:
-            transformed_anchors = self.regressBoxes(anchors, regression)
-            transformed_anchors = self.clipBoxes(transformed_anchors, detection)
+            transformed_anchors = self.regress_boxes(anchors, regression)
+            transformed_anchors = self.clip_boxes(transformed_anchors, detection)
             scores = torch.max(classification, dim=2, keepdim=True)[0]
             scores_over_thresh = (scores > self.threshold)[0, :, 0]
 
